@@ -32,11 +32,14 @@ public class MunitSuiteRunner
     private MuleContextManager muleContextManager = new MuleContextManager(null);
 
 
-    public MunitSuiteRunner(String resources)
-    {
 
-        try
-        {
+    public MunitSuiteRunner(String resources) {
+        this(resources, null);
+    }
+
+    public MunitSuiteRunner(String resources, String testToRunName) {
+        try {
+
             muleContext = muleContextManager.startMule(resources);
 
             suite = new MunitSuiteBuilder(muleContext, handler).build(resources);

@@ -8,140 +8,80 @@ package org.mule.munit.runner.remote;
 
 
 import org.mule.munit.runner.mule.MunitSuiteRunner;
-import org.mule.munit.runner.mule.MunitTest;
-import org.mule.munit.runner.mule.result.SuiteResult;
-import org.mule.munit.runner.mule.result.TestResult;
-import org.mule.munit.runner.mule.result.notification.NotificationListener;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-public class MunitRemoteRunner
-{
+public class MunitRemoteRunner {
+    public static final String PORT_PARAMETER = "-port";
+    public static final String TEST_PATH_PARAMETER = "-path";
+    public static final String RESOURCE_PARAMETER = "-resource";
+    public static final String TEST_NAME_PARAMETER = "-test_name";
 
-    Socket requestSocket;
-    ObjectOutputStream out;
-    ObjectInputStream in;
     String message;
+    Socket requestSocket;
+
+    //    ObjectInputStream in;
+    ObjectOutputStream out;
+
+    public static void main(String args[]) {
+        int port = -1;
+        String path = null;
+        String resource = null;
+        String testName = null;
 
 
-    public void run(int port, String path, String resource)
-    {
-        try
-        {
+        for (int i = 0; i < args.length; i++) {
+            if (args[i].equalsIgnoreCase(RESOURCE_PARAMETER)) {
+                resource = args[i + 1];
+            }
+            if (args[i].equalsIgnoreCase(PORT_PARAMETER)) {
+                port = Integer.valueOf(args[i + 1]);
+            }
+            if (args[i].equalsIgnoreCase(TEST_PATH_PARAMETER)) {
+                path = args[i + 1];
+            }
+            if (args[i].equalsIgnoreCase(TEST_NAME_PARAMETER)) {
+                testName = args[i + 1];
+            }
+        }
+
+        MunitRemoteRunner serverRemoteRunner = new MunitRemoteRunner();
+        serverRemoteRunner.run(port, path, resource, testName);
+
+    }
+
+    public void run(int port, String path, String resource, String testName) {
+        try {
             //1. creating a socket to connect to the server
             requestSocket = new Socket("localhost", port);
-            System.out.println("Connected to localhost in port " + port);
+            System.out.println("[" + this.getClass().getName() + "]" + "Connected to localhost in port " + port);
             out = new ObjectOutputStream(requestSocket.getOutputStream());
             out.flush();
 
-            MunitSuiteRunner runner = new MunitSuiteRunner(resource);
+            RemoteRunnerNotificationListener listener = new RemoteRunnerNotificationListener(out);
 
-            runner.setNotificationListener(new NotificationListener()
-            {
+            MunitSuiteRunner runner = new MunitSuiteRunner(resource, testName);
+            runner.setNotificationListener(listener);
 
-                public void notifyStartOf(MunitTest test)
-                {
-                    try
-                    {
-                        out.writeObject("1;" + test.getName());
-                        out.flush();
-                    }
-                    catch (IOException e)
-                    {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
+            listener.notifyNumberOfTest(runner.getNumberOfTests());
+            listener.notifyTestRunEnd(path);// TODO: shouldn't this be sent after the test is rund in the finally ?
 
-
-                }
-
-                public void notify(TestResult testResult)
-                {
-                    try
-                    {
-                        if (testResult.getError() != null)
-                        {
-                            out.writeObject("3;" + testResult.getTestName() + ";'" + testResult.getError().getFullMessage() + "'");
-                            out.flush();
-                        }
-                        else if (testResult.getFailure() != null)
-                        {
-                            out.writeObject("2;" + testResult.getTestName() + ";'" + testResult.getFailure().getFullMessage() + "'");
-
-                            out.flush();
-                        }
-                        else
-                        {
-                            out.writeObject("4;" + testResult.getTestName());
-                            out.flush();
-                        }
-
-                    }
-                    catch (IOException e)
-                    {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
-                    }
-
-                }
-
-                @Override
-                public void notifyEnd(SuiteResult result)
-                {
-                    // DO NOTHING
-                    // TODO: FIX THIS
-                }
-            });
-            out.writeObject("0;" + runner.getNumberOfTests());
-            out.writeObject("5;" + path);
             runner.run();
-        }
-        catch (IOException ioException)
-        {
+        } catch (IOException ioException) {
             ioException.printStackTrace();
-        }
-        finally
-        {
+        } finally {
             //4: Closing connection
-            try
-            {
+            try {
                 out.close();
                 requestSocket.close();
-            }
-            catch (IOException ioException)
-            {
+            } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
         }
         System.exit(0);
     }
 
-    public static void main(String args[])
-    {
-        String resource = null;
-        int port = -1;
-        String path = null;
-        for (int i = 0; i < args.length; i++)
-        {
-            if (args[i].equalsIgnoreCase("-resource"))
-            {
-                resource = args[i + 1];
-            }
-            if (args[i].equalsIgnoreCase("-port"))
-            {
-                port = Integer.valueOf(args[i + 1]);
-            }
-            if (args[i].equalsIgnoreCase("-path"))
-            {
-                path = args[i + 1];
-            }
-        }
-        MunitRemoteRunner server = new MunitRemoteRunner();
-        server.run(port, path, resource);
-
-    }
 
 }
