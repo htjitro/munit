@@ -21,8 +21,6 @@ public class MunitRemoteRunner {
 
     String message;
     Socket requestSocket;
-
-    //    ObjectInputStream in;
     ObjectOutputStream out;
 
     public static void main(String args[]) {
