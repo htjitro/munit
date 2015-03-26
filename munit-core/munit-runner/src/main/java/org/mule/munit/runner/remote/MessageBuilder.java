@@ -21,6 +21,7 @@ public class MessageBuilder {
     public static final String TEST_ERROR_MSG_ID = "3" + MESSAGE_TOKEN_SEPARATOR;
     public static final String TEST_FINSHED_MSG_ID = "4" + MESSAGE_TOKEN_SEPARATOR;
     public static final String TEST_RUN_FINSHED_MSG_ID = "5" + MESSAGE_TOKEN_SEPARATOR;
+    public static final String TEST_IGNORED_MSG_ID = "6" + MESSAGE_TOKEN_SEPARATOR;
 
     public static final String STACK_TRACE_MARKER = "'";
 
@@ -61,6 +62,14 @@ public class MessageBuilder {
         builder.append(STACK_TRACE_MARKER);
         return builder.toString();
     }
+    
+    public static String buildTestIgnoredMessage(String testName) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(TEST_IGNORED_MSG_ID);
+        builder.append(testName);
+        return builder.toString();
+    }
+    
 
     public static String buildTestFinishedMessage(String testName) {
         StringBuilder builder = new StringBuilder();

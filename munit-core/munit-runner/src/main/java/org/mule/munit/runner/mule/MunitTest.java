@@ -89,7 +89,9 @@ public class MunitTest
     {
         return test.getName();
     }
-
+    
+    public boolean isIgnore(){ return test.isIgnore();}
+    
     public TestResult run()
     {
         TestResult result = new TestResult(getName());

@@ -20,20 +20,17 @@ import java.util.List;
  * @author Mulesoft Inc.
  * @since 3.3.2
  */
-public class MunitSuite
-{
+public class MunitSuite {
 
     private String name;
     private List<MunitTest> munitTests = new ArrayList<MunitTest>();
     private NotificationListener notificationListener = new DummyNotificationListener();
 
-    public MunitSuite(String name)
-    {
+    public MunitSuite(String name) {
         this.name = name;
     }
 
-    public void add(MunitTest test)
-    {
+    public void add(MunitTest test) {
         munitTests.add(test);
     }
 
@@ -43,15 +40,19 @@ public class MunitSuite
      * @return The Result of the suite execution
      * @throws Exception If the suite failed for one reason.
      */
-    public SuiteResult run() throws Exception
-    {
+    public SuiteResult run() throws Exception {
         SuiteResult result = new SuiteResult(name);
 
-        for (MunitTest test : munitTests)
-        {
+        for (MunitTest test : munitTests) {
             notificationListener.notifyStartOf(test);
+
             TestResult testResult = test.run();
             result.add(testResult);
+
+            if (testResult.isSkipped()) {
+                notificationListener.notifyIgnored(testResult);
+            }
+
             notificationListener.notify(testResult);
         }
 
@@ -59,24 +60,20 @@ public class MunitSuite
         return result;
     }
 
-    public void setNotificationListener(NotificationListener notificationListener)
-    {
-        if (notificationListener == null)
-        {
+    public void setNotificationListener(NotificationListener notificationListener) {
+        if (notificationListener == null) {
             throw new IllegalArgumentException();
         }
 
         this.notificationListener = notificationListener;
     }
 
-    public int getNumberOfTests()
-    {
+    public int getNumberOfTests() {
 
         return munitTests.size();
     }
 
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 }

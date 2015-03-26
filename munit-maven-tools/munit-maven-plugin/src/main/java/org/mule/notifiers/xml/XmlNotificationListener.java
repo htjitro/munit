@@ -57,6 +57,11 @@ public class XmlNotificationListener implements NotificationListener
     }
 
     @Override
+    public void notifyIgnored(TestResult testResult) {
+
+    }
+
+    @Override
     public void notifyEnd(SuiteResult result)
     {
         CdataAwareXppDriver xppDriver = new CdataAwareXppDriver();

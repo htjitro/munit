@@ -39,6 +39,14 @@ public class NotificationListenerDecorator implements NotificationListener
     }
 
     @Override
+    public void notifyIgnored(TestResult testResult) {
+        for (NotificationListener notificationListener : notificationListeners)
+        {
+            notificationListener.notifyIgnored(testResult);
+        }
+    }
+
+    @Override
     public void notifyEnd(SuiteResult result)
     {
         for (NotificationListener notificationListener : notificationListeners)

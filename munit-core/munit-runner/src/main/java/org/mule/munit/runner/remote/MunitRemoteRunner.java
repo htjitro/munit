@@ -64,10 +64,11 @@ public class MunitRemoteRunner {
             runner.setNotificationListener(listener);
 
             listener.notifyNumberOfTest(runner.getNumberOfTests());
-            listener.notifyTestRunEnd(path);// TODO: shouldn't this be sent after the test is rund in the finally ?
+            listener.notifyTestRunEnd(path);// TODO: shouldn't this be sent after the test is run in the finally ?
 
             runner.run();
         } catch (IOException ioException) {
+            // TODO: catch other exceptions and notify errors
             ioException.printStackTrace();
         } finally {
             //4: Closing connection

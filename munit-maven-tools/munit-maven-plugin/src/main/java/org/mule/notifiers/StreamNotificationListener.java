@@ -71,6 +71,11 @@ public class StreamNotificationListener implements NotificationListener
     }
 
     @Override
+    public void notifyIgnored(TestResult testResult) {
+        out.flush();
+    }
+
+    @Override
     public void notifyEnd(SuiteResult result)
     {
         out.println();

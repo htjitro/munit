@@ -32,6 +32,11 @@ public class DummyNotificationListener implements NotificationListener
     }
 
     @Override
+    public void notifyIgnored(TestResult testResult) {
+
+    }
+
+    @Override
     public void notifyEnd(SuiteResult result)
     {
         //To change body of implemented methods use File | Settings | File Templates.

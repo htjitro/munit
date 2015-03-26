@@ -48,6 +48,11 @@ public class RemoteRunnerNotificationListener implements NotificationListener {
     }
 
     @Override
+    public void notifyIgnored(TestResult testResult) {
+        sendMessage(MessageBuilder.buildTestIgnoredMessage(testResult.getName()));
+    }
+    
+    @Override
     public void notifyEnd(SuiteResult result) {
         // DO NOTHING
         // TODO: FIX THIS

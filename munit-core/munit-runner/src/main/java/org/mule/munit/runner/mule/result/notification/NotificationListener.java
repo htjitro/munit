@@ -22,6 +22,8 @@ public interface NotificationListener
     void notifyStartOf(MunitTest test);
 
     void notify(TestResult testResult);
+    
+    void notifyIgnored(TestResult testResult);
 
     void notifyEnd(SuiteResult result);
 }
