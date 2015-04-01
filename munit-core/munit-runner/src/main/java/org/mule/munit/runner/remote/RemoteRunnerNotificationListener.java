@@ -9,14 +9,13 @@ package org.mule.munit.runner.remote;
 import org.mule.munit.runner.mule.MunitTest;
 import org.mule.munit.runner.mule.result.SuiteResult;
 import org.mule.munit.runner.mule.result.TestResult;
+import org.mule.munit.runner.mule.result.notification.Notification;
 import org.mule.munit.runner.mule.result.notification.NotificationListener;
 
 import java.io.IOException;
 import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
 
 /**
- *
  * @author Mulesoft Inc.
  * @since 3.6.0
  */
@@ -26,6 +25,10 @@ public class RemoteRunnerNotificationListener implements NotificationListener {
 
     public RemoteRunnerNotificationListener(ObjectOutput out) {
         this.out = out;
+    }
+
+    public void notifyRuntimeStartFailure(Notification notification) {
+        sendMessage(MessageBuilder.buildRuntimeStartFailureMessage(notification.getFullMessage()));
     }
 
     public void notifyNumberOfTest(int numberOfTests) {
@@ -51,7 +54,7 @@ public class RemoteRunnerNotificationListener implements NotificationListener {
     public void notifyIgnored(TestResult testResult) {
         sendMessage(MessageBuilder.buildTestIgnoredMessage(testResult.getName()));
     }
-    
+
     @Override
     public void notifyEnd(SuiteResult result) {
         // DO NOTHING

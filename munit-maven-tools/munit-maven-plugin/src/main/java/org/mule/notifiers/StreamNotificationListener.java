@@ -27,6 +27,11 @@ public class StreamNotificationListener implements NotificationListener
         this.out = out;
     }
 
+    @Override
+    public void notifyRuntimeStartFailure(Notification notification) {
+
+    }
+
     public void notifyStartOf(MunitTest test)
     {
         out.flush();
@@ -70,6 +75,7 @@ public class StreamNotificationListener implements NotificationListener
         }
     }
 
+    
     @Override
     public void notifyIgnored(TestResult testResult) {
         out.flush();

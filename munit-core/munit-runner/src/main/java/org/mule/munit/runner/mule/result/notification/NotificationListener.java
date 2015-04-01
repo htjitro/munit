@@ -19,6 +19,8 @@ import org.mule.munit.runner.mule.result.TestResult;
 public interface NotificationListener
 {
 
+    void notifyRuntimeStartFailure(Notification notification);
+    
     void notifyStartOf(MunitTest test);
 
     void notify(TestResult testResult);

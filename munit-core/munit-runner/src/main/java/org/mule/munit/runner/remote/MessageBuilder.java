@@ -7,6 +7,8 @@
 package org.mule.munit.runner.remote;
 
 
+import org.mule.munit.runner.mule.result.notification.Notification;
+
 /**
  * @author Mulesoft Inc.
  * @since 3.6.0
@@ -23,7 +25,20 @@ public class MessageBuilder {
     public static final String TEST_RUN_FINSHED_MSG_ID = "5" + MESSAGE_TOKEN_SEPARATOR;
     public static final String TEST_IGNORED_MSG_ID = "6" + MESSAGE_TOKEN_SEPARATOR;
 
+    public static final String RUNTIME_START_FAILURE_MSG_ID = "7" + MESSAGE_TOKEN_SEPARATOR;
+
     public static final String STACK_TRACE_MARKER = "'";
+
+    public static String buildRuntimeStartFailureMessage(String fullMessage) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(RUNTIME_START_FAILURE_MSG_ID);
+        builder.append(MESSAGE_TOKEN_SEPARATOR);
+        builder.append(STACK_TRACE_MARKER);
+        builder.append(fullMessage);
+        builder.append(STACK_TRACE_MARKER);
+
+        return builder.toString();
+    }
 
     public static String buildNuberOfTestsMessage(String numberOfTests) {
         StringBuilder builder = new StringBuilder();
@@ -62,14 +77,14 @@ public class MessageBuilder {
         builder.append(STACK_TRACE_MARKER);
         return builder.toString();
     }
-    
+
     public static String buildTestIgnoredMessage(String testName) {
         StringBuilder builder = new StringBuilder();
         builder.append(TEST_IGNORED_MSG_ID);
         builder.append(testName);
         return builder.toString();
     }
-    
+
 
     public static String buildTestFinishedMessage(String testName) {
         StringBuilder builder = new StringBuilder();
