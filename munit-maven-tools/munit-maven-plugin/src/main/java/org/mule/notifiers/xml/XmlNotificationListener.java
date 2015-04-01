@@ -11,6 +11,7 @@ import com.thoughtworks.xstream.XStream;
 import org.mule.munit.runner.mule.MunitTest;
 import org.mule.munit.runner.mule.result.SuiteResult;
 import org.mule.munit.runner.mule.result.TestResult;
+import org.mule.munit.runner.mule.result.notification.Notification;
 import org.mule.munit.runner.mule.result.notification.NotificationListener;
 
 import java.io.PrintStream;
@@ -33,6 +34,11 @@ public class XmlNotificationListener implements NotificationListener
         this.name = name.replace(".xml", "");
         this.out = out;
         this.suite = new TestSuite(dumpProperties(System.getProperties()), this.name);
+    }
+
+    @Override
+    public void notifyRuntimeStartFailure(Notification notification) {
+
     }
 
     @Override

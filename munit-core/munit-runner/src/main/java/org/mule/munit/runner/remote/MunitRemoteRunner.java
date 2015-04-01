@@ -8,6 +8,8 @@ package org.mule.munit.runner.remote;
 
 
 import org.mule.munit.runner.mule.MunitSuiteRunner;
+import org.mule.munit.runner.mule.MunitTest;
+import org.mule.munit.runner.mule.result.notification.Notification;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -51,6 +53,7 @@ public class MunitRemoteRunner {
     }
 
     public void run(int port, String path, String resource, String testName) {
+        RemoteRunnerNotificationListener listener = null;
         try {
             //1. creating a socket to connect to the server
             requestSocket = new Socket("localhost", port);
@@ -58,10 +61,20 @@ public class MunitRemoteRunner {
             out = new ObjectOutputStream(requestSocket.getOutputStream());
             out.flush();
 
-            RemoteRunnerNotificationListener listener = new RemoteRunnerNotificationListener(out);
+            listener = new RemoteRunnerNotificationListener(out);
 
-            MunitSuiteRunner runner = new MunitSuiteRunner(resource, testName);
-            runner.setNotificationListener(listener);
+
+            MunitSuiteRunner runner;
+            try {
+                runner = new MunitSuiteRunner(resource, testName);
+                runner.setNotificationListener(listener);
+            } catch (RuntimeException e) {
+                if (listener != null) {
+                    listener.notifyRuntimeStartFailure(new Notification(e.getMessage(), MunitTest.stack2string(e)));
+                }
+                throw e;
+            }
+
 
             listener.notifyNumberOfTest(runner.getNumberOfTests());
             listener.notifyTestRunEnd(path);// TODO: shouldn't this be sent after the test is run in the finally ?

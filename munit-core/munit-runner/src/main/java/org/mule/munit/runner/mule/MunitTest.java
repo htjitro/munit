@@ -58,7 +58,7 @@ public class MunitTest
     private TestOutputHandler outputHandler;
     private MuleContext muleContext;
 
-    private static String stack2string(Throwable e)
+    public static String stack2string(Throwable e)
     {
         try
         {

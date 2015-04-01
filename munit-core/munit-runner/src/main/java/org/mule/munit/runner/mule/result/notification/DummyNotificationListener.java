@@ -20,6 +20,11 @@ public class DummyNotificationListener implements NotificationListener
 {
 
     @Override
+    public void notifyRuntimeStartFailure(Notification notification) {
+
+    }
+
+    @Override
     public void notifyStartOf(MunitTest test)
     {
 
