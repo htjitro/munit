@@ -42,7 +42,7 @@ public class MunitSuiteRunner
 
             muleContext = muleContextManager.startMule(resources);
 
-            suite = new MunitSuiteBuilder(muleContext, handler).build(resources);
+            suite = new MunitSuiteBuilder(muleContext, handler).build(resources,testToRunName);
 
         }
         catch (Exception e)

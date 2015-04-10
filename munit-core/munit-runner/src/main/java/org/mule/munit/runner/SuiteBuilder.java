@@ -12,6 +12,7 @@ import org.mule.munit.config.MunitAfterTest;
 import org.mule.munit.config.MunitBeforeTest;
 import org.mule.munit.config.MunitFlow;
 import org.mule.munit.config.MunitTestFlow;
+import org.mule.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -69,17 +70,38 @@ public abstract class SuiteBuilder<T, E>
      * @param suiteName The desired suite name
      * @return The Suite Object
      */
-    public T build(String suiteName)
-    {
+    public T build(String suiteName) {
+        return build(suiteName, null);
+    }
+
+    /**
+     * <p>Builds the Suite with a particular suite name, based on the mule context</p>
+     *
+     * @param suiteName The desired suite name
+     * @return The Suite Object
+     */
+    public T build(String suiteName, String testToRunName) {
         List<MunitFlow> before = lookupFlows(MunitBeforeTest.class);
         List<MunitFlow> after = lookupFlows(MunitAfterTest.class);
         Collection<MunitTestFlow> flowConstructs = lookupTests();
-        for (MunitTestFlow flowConstruct : flowConstructs)
-        {
-            tests.add(test(before, flowConstruct, after));
+        for (MunitTestFlow flowConstruct : flowConstructs) {
+            tests.add(test(before, flagIgnoreTest(flowConstruct, testToRunName), after));
         }
 
         return createSuite(suiteName);
+    }
+
+    private MunitTestFlow flagIgnoreTest(MunitTestFlow munitTestFlow, String testToRunName) {
+        if (StringUtils.isBlank(testToRunName) || munitTestFlow.isIgnore()) {
+            return munitTestFlow;
+        }
+
+        if (munitTestFlow.getName().matches(testToRunName)) {
+            munitTestFlow.setIgnore(false);
+        } else {
+            munitTestFlow.setIgnore(true);
+        }
+        return munitTestFlow;
     }
 
     private List<MunitFlow> lookupFlows(Class munitClass)
