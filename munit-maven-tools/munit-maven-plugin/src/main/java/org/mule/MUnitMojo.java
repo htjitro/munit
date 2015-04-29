@@ -120,7 +120,8 @@ public class MUnitMojo
             if (testFolder == null || !testFolder.exists()) {
                 return;
             }
-            Collection<File> allFiles = FileUtils.listFiles(testFolder, null, true);
+
+            Collection<File> allFiles = getMunitTestSuiteFileList(testFolder);
             for (File file : allFiles) {
                 String fileName = file.getPath().replace(testFolder.getPath() + File.separator, "");
 
@@ -145,6 +146,34 @@ public class MUnitMojo
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } finally {
         }
+    }
+
+    private Collection<File> getMunitTestSuiteFileList(File munitTestFolder) throws FileNotFoundException {
+        Collection<File> munitTestSuiteFiles = new ArrayList<File>();
+
+        Collection<File> allFiles = FileUtils.listFiles(munitTestFolder, null, true);
+        for (File file : allFiles) {
+            if (isValidMunitTestSuiteFile(file)) {
+                munitTestSuiteFiles.add(file);
+            }
+        }
+        return munitTestSuiteFiles;
+    }
+
+    private boolean isValidMunitTestSuiteFile(File file) throws FileNotFoundException {
+        String MUNIT_TEST_SUITE_FILE_MARKER = "munit:config";
+        Scanner scanner = new Scanner(file);
+
+        while (scanner.hasNextLine()) {
+            String line = scanner.nextLine();
+            if (line.contains(MUNIT_TEST_SUITE_FILE_MARKER)) {
+                scanner.close();
+                return true;
+            }
+        }
+
+        scanner.close();
+        return false;
     }
 
     private void show(List<SuiteResult> results) throws MojoExecutionException {
