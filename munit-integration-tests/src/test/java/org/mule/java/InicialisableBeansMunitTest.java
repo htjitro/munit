@@ -29,7 +29,7 @@ public class InicialisableBeansMunitTest extends FunctionalMunitSuite {
 
         Collection c = muleContext.getRegistry().lookupObjects(IntialisableBean.CLASS_TO_LOOKUP);
 
-        Assert.assertEquals(1, bean.getCallsToInitialise());
+        Assert.assertEquals(2, bean.getCallsToInitialise());
         Assert.assertNotNull(c);
         Assert.assertTrue(c.size()!= 0);;
 //        System.out.println("munit lalalal ---: " + c.size());

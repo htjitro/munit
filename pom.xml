@@ -1,18 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.mule</groupId>
     <artifactId>munit</artifactId>
-    <version>3.6.0-BETA1-SNAPSHOT</version>
+    <version>3.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>The Munit Project</name>
 
     <properties>
-        <mule.version>3.6.0</mule.version>
+        <mule.version>3.7.0-M2-SNAPSHOT</mule.version>
         <mule.devkit.version>3.6.0</mule.devkit.version>
-        <interceptor.api.version>3.6.0-BETA1-SNAPSHOT</interceptor.api.version>
+
+        <interceptor.api.version>3.7.0-SNAPSHOT</interceptor.api.version>
 
         <maven.javadoc.skip>true</maven.javadoc.skip>
 
@@ -107,8 +109,6 @@
                 <version>${mule.version}</version>
                 <scope>provided</scope>
             </dependency>
-
-
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>

@@ -8,10 +8,10 @@ package org.mule.munit.config;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import org.mule.api.MessagingException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.expression.ExpressionManager;
 import org.mule.api.registry.MuleRegistry;
 
@@ -24,8 +24,7 @@ import static org.mockito.Mockito.when;
  * @author Mulesoft Inc.
  * @since 3.3.2
  */
-public class MunitTestFlowTest
-{
+public class MunitTestFlowTest {
 
     public static final String EXPECTED = "expected";
     MuleContext muleContext = mock(MuleContext.class);
@@ -35,8 +34,7 @@ public class MunitTestFlowTest
 
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         when(muleContext.getRegistry()).thenReturn(registry);
         when(muleContext.getExpressionManager()).thenReturn(expressionManager);
 
@@ -44,7 +42,12 @@ public class MunitTestFlowTest
 
     @Test
     public void testSetters()
+
     {
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultProcessingStrategy()).thenReturn(null);
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+
         MunitTestFlow testFlow = new MunitTestFlow("name", muleContext);
 
         testFlow.setExpectExceptionThatSatisfies(EXPECTED);
@@ -55,8 +58,13 @@ public class MunitTestFlowTest
     }
 
     @Test
-    public void testExceptionWhenMatchesExpression()
-    {
+    public void testExceptionWhenMatchesExpression() {
+
+
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultProcessingStrategy()).thenReturn(null);
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+
         MunitTestFlow testFlow = new MunitTestFlow("name", muleContext);
         testFlow.setExpectExceptionThatSatisfies(EXPECTED);
 
@@ -67,8 +75,12 @@ public class MunitTestFlowTest
     }
 
     @Test(expected = junit.framework.AssertionFailedError.class)
-    public void testExceptionWhenDoesntMatchExpression()
-    {
+    public void testExceptionWhenDoesntMatchExpression() {
+
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultProcessingStrategy()).thenReturn(null);
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+
         MunitTestFlow testFlow = new MunitTestFlow("name", muleContext);
         testFlow.setExpectExceptionThatSatisfies(EXPECTED);
 
@@ -79,8 +91,12 @@ public class MunitTestFlowTest
     }
 
     @Test
-    public void testExceptionWheIsNotExpressionButMatchesName()
-    {
+    public void testExceptionWheIsNotExpressionButMatchesName() {
+
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultProcessingStrategy()).thenReturn(null);
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+
         MunitTestFlow testFlow = new MunitTestFlow("name", muleContext);
         testFlow.setExpectExceptionThatSatisfies(Exception.class.getCanonicalName());
 
@@ -90,8 +106,12 @@ public class MunitTestFlowTest
     }
 
     @Test(expected = junit.framework.AssertionFailedError.class)
-    public void testExceptionWheIsNotExpressionAndDoesntMatchName()
-    {
+    public void testExceptionWheIsNotExpressionAndDoesntMatchName() {
+
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultProcessingStrategy()).thenReturn(null);
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+
         MunitTestFlow testFlow = new MunitTestFlow("name", muleContext);
         testFlow.setExpectExceptionThatSatisfies("any");
 
@@ -101,8 +121,12 @@ public class MunitTestFlowTest
     }
 
     @Test(expected = junit.framework.AssertionFailedError.class)
-    public void testMessagingWithNoCauseException()
-    {
+    public void testMessagingWithNoCauseException() {
+
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultProcessingStrategy()).thenReturn(null);
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+
         MunitTestFlow testFlow = new MunitTestFlow("name", muleContext);
         testFlow.setExpectExceptionThatSatisfies("any");
 
@@ -112,8 +136,12 @@ public class MunitTestFlowTest
     }
 
     @Test(expected = junit.framework.AssertionFailedError.class)
-    public void testMessagingWithCauseExceptionThatDoesntMatchTheName()
-    {
+    public void testMessagingWithCauseExceptionThatDoesntMatchTheName() {
+
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultProcessingStrategy()).thenReturn(null);
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+
         MunitTestFlow testFlow = new MunitTestFlow("name", muleContext);
         testFlow.setExpectExceptionThatSatisfies("any");
 
@@ -123,8 +151,12 @@ public class MunitTestFlowTest
     }
 
     @Test
-    public void testMessagingWithCauseExceptionThattMatchesTheName()
-    {
+    public void testMessagingWithCauseExceptionThattMatchesTheName() {
+
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultProcessingStrategy()).thenReturn(null);
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+
         MunitTestFlow testFlow = new MunitTestFlow("name", muleContext);
         testFlow.setExpectExceptionThatSatisfies(Exception.class.getCanonicalName());
 

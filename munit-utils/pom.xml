@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mule.munit.utils</groupId>
     <artifactId>munit-utils</artifactId>
-    <version>3.6.0-BETA1-SNAPSHOT</version>
+    <version>3.7.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>Utils for integration testing</name>
@@ -17,7 +17,7 @@
     </modules>
 
     <properties>
-        <mule.version>3.6.0</mule.version>
+        <mule.version>3.7.0-M2-SNAPSHOT</mule.version>
         <mule.devkit.version>3.6.0</mule.devkit.version>
 
         <skip.javadoc>true</skip.javadoc>

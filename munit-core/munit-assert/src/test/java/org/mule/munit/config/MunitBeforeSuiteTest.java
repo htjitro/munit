@@ -9,8 +9,10 @@ package org.mule.munit.config;
 import org.junit.Test;
 
 import org.mule.api.MuleContext;
+import org.mule.api.config.MuleConfiguration;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Mulesoft Inc.
@@ -25,6 +27,10 @@ public class MunitBeforeSuiteTest
     @Test
     public void testConstructor()
     {
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultProcessingStrategy()).thenReturn(null);
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+
         new MunitBeforeSuite("name", muleContext);
     }
 

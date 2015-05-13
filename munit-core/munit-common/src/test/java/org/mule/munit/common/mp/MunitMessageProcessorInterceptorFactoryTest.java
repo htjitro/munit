@@ -10,7 +10,10 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 import static junit.framework.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.mule.api.MuleContext;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.processor.LoggerMessageProcessor;
 import org.mule.component.simple.EchoComponent;
 import org.mule.config.spring.factories.FlowRefFactoryBean;
@@ -79,6 +82,11 @@ public class MunitMessageProcessorInterceptorFactoryTest
     @Test
     public void testCreateWithTwoConstructorArguments()
     {
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultProcessingStrategy()).thenReturn(null);
+        when(context.getConfiguration()).thenReturn(muleConfiguration);
+
+
         MunitMessageProcessorInterceptorFactory factory = new MunitMessageProcessorInterceptorFactory();
 
         Object o = factory.create(Flow.class, new MessageProcessorId("name", "namespace"), new HashMap<String, String>(), "fileName", "2", "flowName", context);

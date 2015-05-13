@@ -9,9 +9,11 @@ package org.mule.munit.config;
 import org.junit.Test;
 
 import org.mule.api.MuleContext;
+import org.mule.api.config.MuleConfiguration;
 
 import static junit.framework.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Mulesoft Inc.
@@ -25,6 +27,10 @@ public class MunitFlowTest
     @Test
     public void testFlowDescription()
     {
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultProcessingStrategy()).thenReturn(null);
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+
         MunitFlow flow = new MunitFlow("name", muleContext);
         flow.setDescription("my Description");
 

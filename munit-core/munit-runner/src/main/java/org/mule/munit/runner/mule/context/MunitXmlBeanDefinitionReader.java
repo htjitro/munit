@@ -9,6 +9,10 @@ package org.mule.munit.runner.mule.context;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 
+/**
+ * this class is not needed anymore
+ */
+@Deprecated
 public class MunitXmlBeanDefinitionReader extends XmlBeanDefinitionReader
 {
 

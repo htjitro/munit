@@ -15,12 +15,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import org.junit.Before;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.NestedProcessor;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.modules.interceptor.processors.MuleMessageTransformer;
 import org.mule.munit.common.mocking.EndpointMocker;
@@ -68,6 +71,12 @@ public class MockModuleTest
     private MunitVerifier verifier = mock(MunitVerifier.class);
     private AbstractMessageTransformer muleTransformer = mock(AbstractMessageTransformer.class);
 
+    @Before
+    public void setUp(){
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultEncoding()).thenReturn("UTF-8");
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+    }
     @Test
     public void whenMethodCanHandlerNullOptionals()
     {

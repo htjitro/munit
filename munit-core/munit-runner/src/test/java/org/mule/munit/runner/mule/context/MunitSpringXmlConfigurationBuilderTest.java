@@ -28,6 +28,6 @@ public class MunitSpringXmlConfigurationBuilderTest
     public void testInstanceCreation() throws Exception
     {
         MunitSpringXmlConfigurationBuilder builder = new MunitSpringXmlConfigurationBuilder("munit-config.xml", configuration);
-        assertTrue(builder.createApplicationContext(muleContext, new ConfigResource[]{}) instanceof MunitApplicationContext);
+        assertTrue(builder.doCreateApplicationContext(muleContext, new ConfigResource[]{},null) instanceof MunitApplicationContext);
     }
 }

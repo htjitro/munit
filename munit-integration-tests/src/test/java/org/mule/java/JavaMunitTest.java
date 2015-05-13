@@ -80,6 +80,7 @@ public class JavaMunitTest extends FunctionalMunitSuite
                     }
                 });
 
+
         Object payload = runFlow("callingJira", testEvent("transformerActing")).getMessage().getPayload();
 
         assertEquals("transformerActing", payload);

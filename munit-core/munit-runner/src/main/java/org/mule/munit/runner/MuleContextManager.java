@@ -12,6 +12,7 @@ import org.mule.api.MuleException;
 import org.mule.api.config.ConfigurationBuilder;
 import org.mule.api.config.MuleProperties;
 import org.mule.api.context.MuleContextBuilder;
+import org.mule.api.context.MuleContextFactory;
 import org.mule.api.context.notification.MessageProcessorNotificationListener;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.AnnotationsConfigurationBuilder;
@@ -83,24 +84,18 @@ public class MuleContextManager {
     public MuleContext createMule(String resources) throws Exception {
         defineLogOutput(resources);
 
-        MuleContext context;
-        org.mule.api.context.MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
-
         List<ConfigurationBuilder> builders = new ArrayList<ConfigurationBuilder>();
-        builders.add(new SimpleConfigurationBuilder(properties()));
-        if (ClassUtils.isClassOnPath(CLASSNAME_ANNOTATIONS_CONFIG_BUILDER,
-                getClass())) {
-            builders.add((ConfigurationBuilder) ClassUtils.instanciateClass(
-                    CLASSNAME_ANNOTATIONS_CONFIG_BUILDER, ClassUtils.NO_ARGS,
-                    getClass()));
-        }
+
+        builders.add(new SimpleConfigurationBuilder(getStartUpProperties()));
+        addIfPresent( builders, CLASSNAME_ANNOTATIONS_CONFIG_BUILDER);
         builders.add(getBuilder(resources));
+
         MuleContextBuilder contextBuilder = new DefaultMuleContextBuilder();
-        configureMuleContext(contextBuilder);
-        context = muleContextFactory
-                .createMuleContext(builders, contextBuilder);
-        ((DefaultMuleConfiguration) context.getConfiguration())
-                .setShutdownTimeout(0);
+        configureMuleContextBuilder(contextBuilder);
+
+        MuleContextFactory muleContextFactory = new DefaultMuleContextFactory();
+        MuleContext context = muleContextFactory.createMuleContext(builders, contextBuilder);
+        ((DefaultMuleConfiguration) context.getConfiguration()).setShutdownTimeout(0);
 
         context.getNotificationManager().setNotificationDynamic(true);
         context.getNotificationManager().addInterfaceToType(MessageProcessorNotificationListener.class, MessageProcessorNotification.class);
@@ -110,7 +105,13 @@ public class MuleContextManager {
         return context;
     }
 
-    private Properties properties() {
+    private void addIfPresent(List<ConfigurationBuilder> builders, String builderClassName) throws Exception {
+        if(ClassUtils.isClassOnPath(builderClassName, this.getClass())) {
+            builders.add((ConfigurationBuilder)ClassUtils.instanciateClass(builderClassName, ClassUtils.NO_ARGS, this.getClass()));
+        }
+    }
+
+    private Properties getStartUpProperties() {
         Properties properties = configuration == null ? null : configuration.getStartUpProperties();
         if (properties == null) {
             properties = new Properties();
@@ -135,7 +136,7 @@ public class MuleContextManager {
         return new MunitSpringXmlConfigurationBuilder(resources, configuration);
     }
 
-    protected void configureMuleContext(MuleContextBuilder contextBuilder) {
+    protected void configureMuleContextBuilder(MuleContextBuilder contextBuilder) {
         contextBuilder.setWorkListener(new TestingWorkListener());
     }
 

@@ -13,6 +13,7 @@ import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
 import org.mule.api.MuleException;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.processor.MessageProcessor;
 import org.mule.munit.common.mocking.NotDefinedPayload;
 
@@ -20,9 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Mulesoft Inc.
@@ -45,6 +44,10 @@ public class MunitUtilsTest
         muleContext = mock(MuleContext.class);
         muleEvent = mock(MuleEvent.class);
         mp = mock(MessageProcessor.class);
+
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultEncoding()).thenReturn("UTF-8");
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
     }
 
     @Test

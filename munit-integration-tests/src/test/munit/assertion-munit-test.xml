@@ -108,10 +108,11 @@
     </munit:test>
 
 
-    <munit:test name="testingGetResourceFunctionUsingJava"
+    <!-- this test is ignore due to a bug in mel evaluator MULE-8593-->
+    <munit:test ignore="true" name="testingGetResourceFunctionUsingJava"
                 description="We want to validate that the payload is the same as the file picked">
 
-        <munit:set payload-ref='#[payload.getClass().getClassLoader().getResourceAsStream("testFile.txt")]'/>
+        <munit:set payload-ref="#[payload.getClass().getClassLoader().getResourceAsStream('testFile.txt')]"/>
 
         <munit:assert-not-null/>
     </munit:test>

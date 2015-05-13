@@ -7,7 +7,6 @@
 package org.mule.munit.runner.mule.context;
 
 import org.mule.config.spring.MuleBeanDefinitionDocumentReader;
-
 import org.springframework.beans.factory.xml.BeanDefinitionParserDelegate;
 import org.springframework.beans.factory.xml.XmlReaderContext;
 import org.w3c.dom.Element;
@@ -21,13 +20,29 @@ import org.w3c.dom.Element;
  * @author Mulesoft Inc.
  * @since 3.3.2
  */
-public class MunitBeanDefinitionDocumentReader extends MuleBeanDefinitionDocumentReader
-{
-    @Override
-    protected BeanDefinitionParserDelegate createHelper(XmlReaderContext readerContext, Element root, BeanDefinitionParserDelegate parentDelegate)
-    {
+public class MunitBeanDefinitionDocumentReader extends MuleBeanDefinitionDocumentReader {
+
+    private BeanDefinitionParserDelegate doCreateParserDelegate(XmlReaderContext readerContext, Element root, BeanDefinitionParserDelegate parentDelegate) {
         BeanDefinitionParserDelegate delegate = new MunitBeanDefinitionParserDelegate(readerContext, this);
         delegate.initDefaults(root, parentDelegate);
         return delegate;
     }
+
+    @Override
+    protected BeanDefinitionParserDelegate createHelper(XmlReaderContext readerContext, Element root) {
+        BeanDefinitionParserDelegate delegate = new MunitBeanDefinitionParserDelegate(readerContext, this);
+        delegate.initDefaults(root);
+        return delegate;
+    }
+
+    @Override
+    protected BeanDefinitionParserDelegate createDelegate(XmlReaderContext readerContext, Element root, BeanDefinitionParserDelegate parentDelegate) {
+        return doCreateParserDelegate(readerContext, root, parentDelegate);
+    }
+
+    /* We maintain this in the event munit can be fully backward compatible */
+    protected BeanDefinitionParserDelegate createHelper(XmlReaderContext readerContext, Element root, BeanDefinitionParserDelegate parentDelegate) {
+        return doCreateParserDelegate(readerContext, root, parentDelegate);
+    }
+
 }

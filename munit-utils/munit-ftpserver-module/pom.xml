@@ -4,7 +4,7 @@
     <parent>
         <artifactId>munit-utils</artifactId>
         <groupId>org.mule.munit.utils</groupId>
-        <version>3.6.0-BETA1-SNAPSHOT</version>
+        <version>3.7.0-SNAPSHOT</version>
     </parent>
     <artifactId>munit-ftpserver-module</artifactId>
     <packaging>mule-module</packaging>

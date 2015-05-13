@@ -17,6 +17,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionReader;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
@@ -66,13 +67,20 @@ public class MunitApplicationContext extends MuleArtifactContext {
 
     @Override
     protected void loadBeanDefinitions(DefaultListableBeanFactory beanFactory) throws IOException {
+//        XmlBeanDefinitionReader beanDefinitionReader = getMunitXmlBeanDefinitionReader(beanFactory);
         XmlBeanDefinitionReader beanDefinitionReader = getMunitXmlBeanDefinitionReader(beanFactory);
         //hook in our custom hierarchical reader
         beanDefinitionReader.setDocumentReaderClass(MunitBeanDefinitionDocumentReader.class);
-        //add error reporting
+
+        //overrite createbeandefinition reader
+        // call super of that method in this parent class
+        // with the beandefinition reader that returns create a wrapper of this shit
+        // be happy and pray
+
 
         beanFactory.registerBeanDefinition(MunitMessageProcessorInterceptorFactory.ID, new RootBeanDefinition(MunitMessageProcessorInterceptorFactory.class));
         beanFactory.registerBeanDefinition(ConnectorMethodInterceptorFactory.ID, new RootBeanDefinition(ConnectorMethodInterceptorFactory.class));
+        //add error reporting
         beanDefinitionReader.setProblemReporter(new MissingParserProblemReporter());
 
 
@@ -95,14 +103,19 @@ public class MunitApplicationContext extends MuleArtifactContext {
         getCurrentMuleContext().remove();
     }
 
-    protected MunitXmlBeanDefinitionReader getMunitXmlBeanDefinitionReader(DefaultListableBeanFactory beanFactory) {
-        return new MunitXmlBeanDefinitionReader(beanFactory);
+//    protected MunitXmlBeanDefinitionReader getMunitXmlBeanDefinitionReader(DefaultListableBeanFactory beanFactory) {
+    protected XmlBeanDefinitionReader getMunitXmlBeanDefinitionReader(DefaultListableBeanFactory beanFactory) {
+        XmlBeanDefinitionReader beanDefinitionReader = (XmlBeanDefinitionReader)createBeanDefinitionReader(beanFactory);
+        beanDefinitionReader.setDocumentLoader(new MunitDocumentLoader());
+        return beanDefinitionReader;
+//        return new MunitXmlBeanDefinitionReader(beanFactory);
     }
 
 
     @Override
     protected void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory) {
         super.prepareBeanFactory(beanFactory);
+
         BeanDefinition beanDefinition = beanFactory.getBeanDefinition(MUNIT_FACTORY_POST_PROCESSOR);
         MutablePropertyValues propertyValues = beanDefinition.getPropertyValues();
         MunitApplicationContextPostProcessor postProcessor = new MunitApplicationContextPostProcessor();

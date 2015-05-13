@@ -15,6 +15,7 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.construct.Flow;
 import org.mule.modules.interceptor.matchers.AnyClassMatcher;
 import org.mule.modules.interceptor.matchers.EqMatcher;
 import org.mule.modules.interceptor.matchers.Matcher;
@@ -224,7 +225,7 @@ public abstract class FunctionalMunitSuite
      * @param payload <p>
      *                The payload of the MuleMessage to be created
      *                </p>
-     * @return <p>
+     * @return <p>                                                                                            x
      *         A mule message without properties and with the specified payload
      *         </p>
      */

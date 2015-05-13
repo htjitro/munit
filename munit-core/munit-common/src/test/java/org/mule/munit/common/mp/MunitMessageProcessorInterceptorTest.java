@@ -144,7 +144,8 @@ public class MunitMessageProcessorInterceptorTest {
 
         MuleMessage expectedMessage = muleMessage();
 
-        when(manager.getBetterMatchingBehavior(any(MessageProcessorCall.class))).thenReturn(returnValueBehavior());
+        MessageProcessorBehavior messageProcessorBehavior = returnValueBehavior();
+        when(manager.getBetterMatchingBehavior(any(MessageProcessorCall.class))).thenReturn(messageProcessorBehavior);
         when(event.getMessage()).thenReturn(expectedMessage);
 
 
@@ -179,7 +180,8 @@ public class MunitMessageProcessorInterceptorTest {
 
         when(manager.getBetterMatchingBeforeSpyAssertion(any(MessageProcessorCall.class))).thenReturn(spyAssertion(createAssertions(beforeAssertionMp)));
         when(manager.getBetterMatchingAfterSpyAssertion(any(MessageProcessorCall.class))).thenReturn(spyAssertion(createAssertions(afterAssertionMp)));
-        when(manager.getBetterMatchingBehavior(any(MessageProcessorCall.class))).thenReturn(returnValueBehavior());
+        MessageProcessorBehavior messageProcessorBehavior = returnValueBehavior();
+        when(manager.getBetterMatchingBehavior(any(MessageProcessorCall.class))).thenReturn(messageProcessorBehavior);
         when(event.getMessage()).thenReturn(expectedMessage);
 
         MuleMessage testMessage = new DefaultMuleMessage(expectedMessage, muleContext);
@@ -219,7 +221,8 @@ public class MunitMessageProcessorInterceptorTest {
         when(expressionManager.parse(ATTR_VALUE, event)).thenReturn("any");
         when(manager.getBetterMatchingBeforeSpyAssertion(any(MessageProcessorCall.class))).thenReturn(spyAssertion(createAssertions(beforeAssertionMp)));
         when(manager.getBetterMatchingAfterSpyAssertion(any(MessageProcessorCall.class))).thenReturn(spyAssertion(createAssertions(afterAssertionMp)));
-        when(manager.getBetterMatchingBehavior(any(MessageProcessorCall.class))).thenReturn(returnValueBehavior());
+        MessageProcessorBehavior messageProcessorBehavior = returnValueBehavior();
+        when(manager.getBetterMatchingBehavior(any(MessageProcessorCall.class))).thenReturn(messageProcessorBehavior);
         when(event.getMessage()).thenReturn(expectedMessage);
 
         MuleMessage testMessage = new DefaultMuleMessage(expectedMessage, muleContext);

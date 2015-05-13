@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.mule.munit.utils</groupId>
         <artifactId>munit-utils</artifactId>
-        <version>3.6.0-BETA1-SNAPSHOT</version>
+        <version>3.7.0-SNAPSHOT</version>
     </parent>
     <artifactId>munit-mclient-module</artifactId>
     <packaging>mule-module</packaging>

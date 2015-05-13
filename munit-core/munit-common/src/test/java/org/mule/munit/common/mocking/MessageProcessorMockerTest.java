@@ -12,6 +12,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import org.mule.DefaultMuleMessage;
 import org.mule.api.MuleContext;
+import org.mule.api.config.MuleConfiguration;
 import org.mule.api.registry.MuleRegistry;
 import org.mule.modules.interceptor.processors.MessageProcessorBehavior;
 import org.mule.munit.common.mp.MockedMessageProcessorManager;
@@ -99,6 +100,10 @@ public class MessageProcessorMockerTest
     @Test
     public void validateThatBehaviorIsAddedWhenThenReturnSame()
     {
+        MuleConfiguration muleConfiguration = mock(MuleConfiguration.class);
+        when(muleConfiguration.getDefaultEncoding()).thenReturn("UTF-8");
+        when(muleContext.getConfiguration()).thenReturn(muleConfiguration);
+
         mocker().when("mp").thenReturnSameEvent();
 
         verify(manager).addBehavior(any(MessageProcessorBehavior.class));

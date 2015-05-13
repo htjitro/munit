@@ -9,7 +9,7 @@ package org.mule.munit.runner.mule.context;
 import org.mule.api.MuleContext;
 import org.mule.api.config.ConfigurationException;
 import org.mule.config.ConfigResource;
-import org.mule.config.spring.SpringXmlConfigurationBuilder;
+import org.mule.config.spring.*;
 
 import org.springframework.context.ApplicationContext;
 
@@ -33,9 +33,7 @@ public class MunitSpringXmlConfigurationBuilder extends SpringXmlConfigurationBu
         this.configuration = configuration;
     }
 
-    @Override
-    protected ApplicationContext createApplicationContext(MuleContext muleContext, ConfigResource[] configResources) throws Exception
-    {
+    protected ApplicationContext doCreateApplicationContext(MuleContext muleContext, ConfigResource[] configResources, OptionalObjectsController optionalObjectsController) {
         return new MunitApplicationContext(muleContext, configResources, configuration);
     }
 }
