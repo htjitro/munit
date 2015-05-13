@@ -7,14 +7,12 @@
 package org.mule.munit.runner.mule.context;
 
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 
 /**
- * this class is not needed anymore
+ * This class is not needed anymore
  */
 @Deprecated
-public class MunitXmlBeanDefinitionReader extends XmlBeanDefinitionReader
-{
+public class MunitXmlBeanDefinitionReader /*extends XmlBeanDefinitionReader*/ {
 
     /**
      * Create new XmlBeanDefinitionReader for the given bean factory.
@@ -22,9 +20,8 @@ public class MunitXmlBeanDefinitionReader extends XmlBeanDefinitionReader
      * @param registry the BeanFactory to load bean definitions into,
      *                 in the form of a BeanDefinitionRegistry
      */
-    public MunitXmlBeanDefinitionReader(BeanDefinitionRegistry registry)
-    {
-        super(registry);
-        setDocumentLoader(new MunitDocumentLoader());
+    public MunitXmlBeanDefinitionReader(BeanDefinitionRegistry registry) {
+//        super(registry);
+//        setDocumentLoader(new MunitDocumentLoader());
     }
 }

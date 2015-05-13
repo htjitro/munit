@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.beans.factory.xml.XmlBeanDefinitionReader;
 import org.springframework.core.io.Resource;
 
 /**
@@ -42,7 +43,7 @@ public class MunitApplicationContextTest
 
     private MuleContext muleContext = mock(MuleContext.class);
     private DefaultListableBeanFactory beanFactory = mock(DefaultListableBeanFactory.class);
-    private MunitXmlBeanDefinitionReader reader = mock(MunitXmlBeanDefinitionReader.class);
+    private XmlBeanDefinitionReader reader = mock(XmlBeanDefinitionReader.class);
 
     @Test
     public void createWithNullConfigResource() throws IOException
@@ -100,7 +101,7 @@ public class MunitApplicationContextTest
         }
 
         @Override
-        protected MunitXmlBeanDefinitionReader getMunitXmlBeanDefinitionReader(DefaultListableBeanFactory beanFactory)
+        protected XmlBeanDefinitionReader getMunitXmlBeanDefinitionReader(DefaultListableBeanFactory beanFactory)
         {
             return reader;
         }
