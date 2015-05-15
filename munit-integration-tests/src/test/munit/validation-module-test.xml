@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule  	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:mock="http://www.mulesoft.org/schema/mule/mock" xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:spring="http://www.springframework.org/schema/beans" version="EE-3.5.1"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/mock/current/mule-mock.xsd">
+    <munit:config doc:name="Munit configuration"/>
+    <mock:config name="mock"/>
+
+    <spring:beans>
+        <spring:import resource="classpath*:validation-module.xml"/>
+    </spring:beans>
+
+    <munit:test name="mockIsEmail" description="Validate if the test runs even if we have extensions api modules in the code">
+        <!--<mock:when config-ref="mock" messageProcessor="validation:is-email" doc:name="Mock">-->
+            <!--<mock:then-return payload-ref="#['mocked-email@fakecompany.com']"/>-->
+        <!--</mock:when>-->
+
+        <munit:set payload-ref="#['valid-email@mulesoft.com']"/>
+
+        <flow-ref name="emailFlow"/>
+
+        <munit:assert-that payloadIs-ref="#['valid-email@mulesoft.com']" message="opps payload is wrong"/>
+
+        <!--<mock:verify-call config-ref="mock" messageProcessor=".*:.*" doc:name="Verify Call">-->
+            <!--<mock:attributes>-->
+                <!--<mock:attribute whereValue-ref="#[string:Echo]" name="doc:name"/>-->
+            <!--</mock:attributes>-->
+        <!--</mock:verify-call>-->
+    </munit:test>
+
+</mule>

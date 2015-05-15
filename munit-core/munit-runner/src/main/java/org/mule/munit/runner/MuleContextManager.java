@@ -17,6 +17,7 @@ import org.mule.api.context.notification.MessageProcessorNotificationListener;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.config.AnnotationsConfigurationBuilder;
 import org.mule.config.DefaultMuleConfiguration;
+import org.mule.config.builders.ExtensionsManagerConfigurationBuilder;
 import org.mule.config.builders.SimpleConfigurationBuilder;
 import org.mule.context.DefaultMuleContextBuilder;
 import org.mule.context.DefaultMuleContextFactory;
@@ -87,6 +88,9 @@ public class MuleContextManager {
         List<ConfigurationBuilder> builders = new ArrayList<ConfigurationBuilder>();
 
         builders.add(new SimpleConfigurationBuilder(getStartUpProperties()));
+
+        builders.add(new ExtensionsManagerConfigurationBuilder());
+
         addIfPresent( builders, CLASSNAME_ANNOTATIONS_CONFIG_BUILDER);
         builders.add(getBuilder(resources));
 
