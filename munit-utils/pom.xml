@@ -17,7 +17,7 @@
     </modules>
 
     <properties>
-        <mule.version>3.7.0-M2-SNAPSHOT</mule.version>
+        <mule.version>3.7.0-SNAPSHOT</mule.version>
         <mule.devkit.version>3.6.0</mule.devkit.version>
 
         <skip.javadoc>true</skip.javadoc>
@@ -263,11 +263,13 @@
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-spring-config</artifactId>
             <version>${mule.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mule.tools.devkit</groupId>
             <artifactId>mule-devkit-annotations</artifactId>
             <version>${mule.devkit.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>oauth.signpost</groupId>
@@ -302,16 +304,6 @@
             <artifactId>mockito-all</artifactId>
             <version>${mockito.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.munit</groupId>
-            <artifactId>munit-assert</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mule.munit</groupId>
-            <artifactId>munit-common</artifactId>
-            <version>${project.version}</version>
         </dependency>
     </dependencies>
 
