@@ -73,7 +73,8 @@ public class MunitHandlerWrapper implements NamespaceHandler {
 
     private boolean byPassDueToException(Class<?> beanType) {
         // "org.mule.module.extension.internal.config.OperationFactoryBean".equals(beanType.getCanonicalName())
-        if ("org.mule.module.extension.internal.config.ConfigurationFactoryBean".equals(beanType.getCanonicalName())) {
+        if ("org.mule.module.extension.internal.config.ConfigurationInstanceProviderFactoryBean".equals(beanType.getCanonicalName())) {
+
             return true;
         }
         return false;

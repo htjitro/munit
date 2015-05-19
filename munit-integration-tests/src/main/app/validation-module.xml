@@ -12,11 +12,11 @@
       version="EE-3.7.0">
 
 
-    <!--<validation:config name="validation"/>-->
+    <validation:config name="validation"/>
 
     <flow name="emailFlow">
-        <!--<validation:is-email email="#[payload]" config-ref="validation"/>-->
-        <logger level="DEBUG" message=""/>
+        <validation:is-email email="#[payload]" config-ref="validation"/>
+        <!--<logger level="DEBUG" message=""/>-->
     </flow>
 
     <!--<flow name="ip">-->
