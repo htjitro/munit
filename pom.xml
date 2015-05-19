@@ -13,6 +13,7 @@
     <properties>
         <mule.version>3.7.0-SNAPSHOT</mule.version>
         <mule.devkit.version>3.6.0</mule.devkit.version>
+        <mule.extensions.version>1.0.0-SNAPSHOT</mule.extensions.version>
 
         <interceptor.api.version>3.7.0-SNAPSHOT</interceptor.api.version>
 
@@ -113,6 +114,12 @@
                 <groupId>org.mule.modules</groupId>
                 <artifactId>mule-module-extensions-spring-support</artifactId>
                 <version>${mule.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mule.extensions</groupId>
+                <artifactId>mule-extensions-annotations</artifactId>
+                <version>${mule.extensions.version}</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

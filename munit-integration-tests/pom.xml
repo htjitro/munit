@@ -15,9 +15,8 @@
     <description>Integration Test for Munit Project</description>
 
     <properties>
-        <!--<mule.version>3.6.0</mule.version>-->
-
         <mule.morphia.version>1.0-SNAPSHOT</mule.morphia.version>
+
         <mule.loggly.version>1.0</mule.loggly.version>
         <eclipsePluginVersion>3.3.0</eclipsePluginVersion>
         <vmtype>org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType</vmtype>
@@ -272,6 +271,12 @@
             <groupId>org.mule.modules</groupId>
             <artifactId>mule-module-scripting</artifactId>
             <version>${mule.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mule.extensions</groupId>
+            <artifactId>mule-extensions-annotations</artifactId>
+            <version>${mule.extensions.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

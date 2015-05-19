@@ -45,7 +45,7 @@ public class MunitHandlerWrapper implements NamespaceHandler {
 
         try {
             Class<?> beanType = Class.forName(beanDefinition.getBeanClassName());
-            if ("org.mule.module.extension.internal.config.ConfigurationFactoryBean".equals(beanType.getCanonicalName())) {
+            if (byPassDueToException(beanType)) {
                 return beanDefinition;
             }
 
@@ -69,6 +69,14 @@ public class MunitHandlerWrapper implements NamespaceHandler {
         }
 
         return beanDefinition;
+    }
+
+    private boolean byPassDueToException(Class<?> beanType) {
+        // "org.mule.module.extension.internal.config.OperationFactoryBean".equals(beanType.getCanonicalName())
+        if ("org.mule.module.extension.internal.config.ConfigurationFactoryBean".equals(beanType.getCanonicalName())) {
+            return true;
+        }
+        return false;
     }
 
     private Map<String, String> getAttributes(Element element) {
@@ -106,11 +114,12 @@ public class MunitHandlerWrapper implements NamespaceHandler {
     /**
      * Due to certain code in the ESB core that's unstable we are force to by pass some beans.
      * This will cause verifications to fail and coverage problems.
-     *
+     * <p/>
      * List of Beans we by pass:
-     *  - Extensions API beans
-     *
+     * - Extensions API beans
+     * <p/>
      * TODO: FIX MU-266
+     *
      * @param beanType
      * @return
      */
