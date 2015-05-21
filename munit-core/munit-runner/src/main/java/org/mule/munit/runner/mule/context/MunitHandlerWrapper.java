@@ -8,12 +8,15 @@ package org.mule.munit.runner.mule.context;
 
 import org.apache.commons.lang.StringUtils;
 import org.mule.api.processor.MessageProcessor;
+import org.mule.module.xml.transformer.AbstractXmlTransformer;
 import org.mule.modules.interceptor.processors.MessageProcessorId;
 import org.mule.munit.common.MunitCore;
 import org.mule.munit.common.mp.MunitMessageProcessorInterceptorFactory;
+import org.mule.routing.Foreach;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.beans.factory.support.AbstractBeanDefinition;
 import org.springframework.beans.factory.xml.NamespaceHandler;
 import org.springframework.beans.factory.xml.ParserContext;
@@ -56,9 +59,13 @@ public class MunitHandlerWrapper implements NamespaceHandler {
 
                 if (!StringUtils.isEmpty(tagName) && beanDefinition.getConstructorArgumentValues().getArgumentCount() <= 5) {
                     String filename = parserContext.getReaderContext().getResource().getFilename();
+
                     MunitMessageProcessorInterceptorFactory.addFactoryDefinitionTo((AbstractBeanDefinition) beanDefinition)
                             .withConstructorArguments(beanType, new MessageProcessorId(getNameFrom(tagName), getNamespaceFrom(tagName)),
                                     getAttributes(element), filename, element.getAttribute(MunitCore.LINE_NUMBER_ELEMENT_ATTRIBUTE));
+
+                    MunitBeanDefinitionScopper.makeBeanDefinitionSingletonIfApplicable(beanDefinition);
+
                     return beanDefinition;
                 }
             }
@@ -71,10 +78,22 @@ public class MunitHandlerWrapper implements NamespaceHandler {
         return beanDefinition;
     }
 
-    private boolean byPassDueToException(Class<?> beanType) {
-        // "org.mule.module.extension.internal.config.OperationFactoryBean".equals(beanType.getCanonicalName())
-        if ("org.mule.module.extension.internal.config.ConfigurationInstanceProviderFactoryBean".equals(beanType.getCanonicalName())) {
 
+    /**
+     * Due to certain code in the ESB core that's unstable we are force to by pass some beans.
+     * This will cause verifications to fail and coverage problems.
+     * <p/>
+     * List of Beans we by pass:
+     * - Extensions API beans
+     * <p/>
+     * SINCE 3.7.0
+     * TODO: FIX MU-266
+     *
+     * @param beanType
+     * @return
+     */
+    private boolean byPassDueToException(Class<?> beanType) {
+        if ("org.mule.module.extension.internal.config.ConfigurationInstanceProviderFactoryBean".equals(beanType.getCanonicalName())) {
             return true;
         }
         return false;
@@ -110,25 +129,6 @@ public class MunitHandlerWrapper implements NamespaceHandler {
         }
 
         return "mule";
-    }
-
-    /**
-     * Due to certain code in the ESB core that's unstable we are force to by pass some beans.
-     * This will cause verifications to fail and coverage problems.
-     * <p/>
-     * List of Beans we by pass:
-     * - Extensions API beans
-     * <p/>
-     * TODO: FIX MU-266
-     *
-     * @param beanType
-     * @return
-     */
-    private boolean shouldByPass(Class<?> beanType) {
-        if ("org.mule.module.extension.internal.config.ConfigurationFactoryBean".equals(beanType.getCanonicalName())) {
-            return true;
-        }
-        return false;
     }
 
     private boolean isMessageProcessor(Class<?> beanType) {

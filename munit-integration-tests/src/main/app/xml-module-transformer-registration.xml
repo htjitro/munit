@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+      xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+      xmlns:spring="http://www.springframework.org/schema/beans"
+      xmlns:mulexml="http://www.mulesoft.org/schema/mule/xml"
+      version="EE-3.6.1"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-current.xsd
+        http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+        http://www.mulesoft.org/schema/mule/xml http://www.mulesoft.org/schema/mule/xml/current/mule-xml.xsd">
+
+	<flow name="transformerException">
+		<foreach collection="#[xpath3('//test')]" counterVariableName="nodeNumber"  doc:name="For Each">
+            <mulexml:dom-to-xml-transformer name="_DomDocumentToString" doc:name="dom-to-xml"></mulexml:dom-to-xml-transformer>
+            <logger level="ERROR" message="aosijdasoidjsaoijdoias"/>
+		</foreach>
+
+        <set-payload value="#['&lt;tests&gt;&lt;test&gt;&lt;nested/&gt;&lt;nested/&gt;&lt;/test&gt;&lt;test&gt;&lt;nested/&gt;&lt;nested/&gt;&lt;/test&gt;&lt;/tests&gt;']" doc:name="Set Payload"/>
+        <foreach collection="#[xpath3('//test')]" counterVariableName="nodeNumber1"  doc:name="For Each">
+            <mulexml:dom-to-xml-transformer  doc:name="dom-to-xml"/>
+            <logger level="ERROR" message="aosijdasoidjsaoijdoias"/>
+        </foreach>
+	</flow>
+</mule>
