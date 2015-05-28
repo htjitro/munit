@@ -75,22 +75,23 @@ public class MunitRemoteRunner {
                 throw e;
             }
 
-
             listener.notifyNumberOfTest(runner.getNumberOfTests());
-            listener.notifyTestRunEnd(path);// TODO: shouldn't this be sent after the test is run in the finally ?
 
             runner.run();
         } catch (IOException ioException) {
             // TODO: catch other exceptions and notify errors
             ioException.printStackTrace();
         } finally {
-            //4: Closing connection
+            listener.notifyTestRunEnd(path);
+
             try {
+                //4: Closing connection
                 out.close();
                 requestSocket.close();
             } catch (IOException ioException) {
                 ioException.printStackTrace();
             }
+            System.out.println("[" + this.getClass().getName() + "]" + "Done");
         }
         System.exit(0);
     }
