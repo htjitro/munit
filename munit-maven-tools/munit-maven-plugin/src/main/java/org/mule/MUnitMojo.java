@@ -107,6 +107,8 @@ public class MUnitMojo
             System.setProperty(DefaultOutputHandler.OUTPUT_FOLDER_PROPERTY, project.getBasedir() + TARGET_SUREFIRE_REPORTS_MUNIT_TXT + "%s-output.txt");
         }
 
+        stopLicenseCheck();
+
         List testResources = project.getTestResources();
         for (Object o : testResources) {
             Resource testResource = (Resource) o;
@@ -146,6 +148,10 @@ public class MUnitMojo
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } finally {
         }
+    }
+
+    private void stopLicenseCheck() {
+        System.setProperty("mule.testingMode", "true");
     }
 
     private Collection<File> getMunitTestSuiteFileList(File munitTestFolder) throws FileNotFoundException {
