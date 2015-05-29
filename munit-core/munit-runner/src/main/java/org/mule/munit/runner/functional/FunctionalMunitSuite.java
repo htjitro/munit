@@ -6,6 +6,9 @@
  */
 package org.mule.munit.runner.functional;
 
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.MessageExchangePattern;
@@ -15,12 +18,7 @@ import org.mule.api.MuleException;
 import org.mule.api.MuleMessage;
 import org.mule.api.lifecycle.InitialisationException;
 import org.mule.api.processor.MessageProcessor;
-import org.mule.construct.Flow;
-import org.mule.modules.interceptor.matchers.AnyClassMatcher;
-import org.mule.modules.interceptor.matchers.EqMatcher;
-import org.mule.modules.interceptor.matchers.Matcher;
-import org.mule.modules.interceptor.matchers.NotNullMatcher;
-import org.mule.modules.interceptor.matchers.NullMatcher;
+import org.mule.modules.interceptor.matchers.*;
 import org.mule.munit.common.MunitCore;
 import org.mule.munit.common.mocking.EndpointMocker;
 import org.mule.munit.common.mocking.MessageProcessorMocker;
@@ -32,32 +30,20 @@ import org.mule.processor.chain.SubflowInterceptingChainLifecycleWrapper;
 import org.mule.tck.MuleTestUtils;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-
-public abstract class FunctionalMunitSuite
-{
+public abstract class FunctionalMunitSuite {
 
     protected static MuleContext muleContext;
 
     private static MuleContextManager muleContextManager;
 
 
-    public FunctionalMunitSuite()
-    {
+    public FunctionalMunitSuite() {
 
-        try
-        {
-            if (muleContext == null || muleContext.isDisposed())
-            {
+        try {
+            if (muleContext == null || muleContext.isDisposed()) {
+
                 String resources = getConfigResources();
                 muleContextManager = new MuleContextManager(createConfiguration());
 
@@ -68,9 +54,7 @@ public abstract class FunctionalMunitSuite
 
             }
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             muleContextManager.killMule(muleContext);
             throw new RuntimeException(e);
         }
@@ -85,8 +69,7 @@ public abstract class FunctionalMunitSuite
      *                    Reference to the {@link MuleContext} that has been started
      *                    </p>
      */
-    protected void muleContextStarted(MuleContext muleContext)
-    {
+    protected void muleContextStarted(MuleContext muleContext) {
     }
 
     /**
@@ -98,12 +81,10 @@ public abstract class FunctionalMunitSuite
      *                    Reference to the {@link MuleContext} that has been created
      *                    </p>
      */
-    protected void muleContextCreated(MuleContext muleContext)
-    {
+    protected void muleContextCreated(MuleContext muleContext) {
     }
 
-    private MockingConfiguration createConfiguration()
-    {
+    private MockingConfiguration createConfiguration() {
         return new MockingConfiguration(haveToDisableInboundEndpoints(), getFlowsExcludedOfInboundDisabling(), haveToMockMuleConnectors(), getStartUpProperties());
     }
 
@@ -114,11 +95,10 @@ public abstract class FunctionalMunitSuite
      * </p>
      *
      * @return <p>
-     *         A list of flow names that have to be excluded of inbound Disabling
-     *         </p>
+     * A list of flow names that have to be excluded of inbound Disabling
+     * </p>
      */
-    protected List<String> getFlowsExcludedOfInboundDisabling()
-    {
+    protected List<String> getFlowsExcludedOfInboundDisabling() {
         return new ArrayList<String>();
     }
 
@@ -132,11 +112,10 @@ public abstract class FunctionalMunitSuite
      * </p>
      *
      * @return <p>
-     *         TRUE/FALSE depending if the inbound endpoints have to be disabled or not.
-     *         </p>
+     * TRUE/FALSE depending if the inbound endpoints have to be disabled or not.
+     * </p>
      */
-    protected boolean haveToDisableInboundEndpoints()
-    {
+    protected boolean haveToDisableInboundEndpoints() {
         return true;
     }
 
@@ -152,54 +131,44 @@ public abstract class FunctionalMunitSuite
      * </p>
      *
      * @return <p>
-     *         True/False depending if the mule connectors have to be mocked or not.
-     *         </p>
+     * True/False depending if the mule connectors have to be mocked or not.
+     * </p>
      */
-    protected boolean haveToMockMuleConnectors()
-    {
+    protected boolean haveToMockMuleConnectors() {
         return true;
     }
 
     @Before
-    public final void __setUpMunit()
-    {
+    public final void __setUpMunit() {
         MunitCore.registerManager(muleContext);
     }
 
     @After
-    public final void __restartMunit()
-    {
+    public final void __restartMunit() {
         MunitCore.reset(muleContext);
     }
 
     /**
      * @return <p>
-     *         If mule-deploy.properties exists then return the  config.resources property value
-     *         </p>
-     *         <p>
-     *         Else if mule-config.xml exists then return "mule-config.xml" as default value.
-     *         </p>
-     *         <p>
-     *         Otherwise, throw exception and the test will fail. You need to override this method.
-     *         </p>
+     * If mule-deploy.properties exists then return the  config.resources property value
+     * </p>
+     * <p>
+     * Else if mule-config.xml exists then return "mule-config.xml" as default value.
+     * </p>
+     * <p>
+     * Otherwise, throw exception and the test will fail. You need to override this method.
+     * </p>
      */
-    protected String getConfigResources()
-    {
+    protected String getConfigResources() {
         Properties props = this.loadProperties("/mule-deploy.properties");
 
-        if (props != null && props.getProperty("config.resources") != null)
-        {
+        if (props != null && props.getProperty("config.resources") != null) {
             return props.getProperty("config.resources");
-        }
-        else
-        {
+        } else {
             InputStream in = this.getClass().getResourceAsStream("/mule-config.xml");
-            if (in != null)
-            {
+            if (in != null) {
                 return "mule-config.xml";
-            }
-            else
-            {
+            } else {
                 throw new IllegalStateException("Could not find mule-deploy.properties nor mule-config.xml file on classpath. Please add any of those files or override the getConfigResources() method to provide the resources by your own");
             }
         }
@@ -210,14 +179,13 @@ public abstract class FunctionalMunitSuite
      *                The event payload for testing
      *                </p>
      * @return <p>
-     *         A MuleEvent that contains a message with payload equals to the param payload
-     *         </p>
+     * A MuleEvent that contains a message with payload equals to the param payload
+     * </p>
      * @throws Exception <p>
      *                   If the event cloud not be created.
      *                   </p>
      */
-    protected final MuleEvent testEvent(Object payload) throws Exception
-    {
+    protected final MuleEvent testEvent(Object payload) throws Exception {
         return new DefaultMuleEvent(muleMessageWithPayload(payload), MessageExchangePattern.REQUEST_RESPONSE, MuleTestUtils.getTestFlow(muleContext));
     }
 
@@ -226,34 +194,28 @@ public abstract class FunctionalMunitSuite
      *                The payload of the MuleMessage to be created
      *                </p>
      * @return <p>                                                                                            x
-     *         A mule message without properties and with the specified payload
-     *         </p>
+     * A mule message without properties and with the specified payload
+     * </p>
      */
-    protected final MuleMessage muleMessageWithPayload(Object payload)
-    {
+    protected final MuleMessage muleMessageWithPayload(Object payload) {
         return new DefaultMuleMessage(payload, muleContext);
     }
 
-    protected final MessageProcessorMocker whenMessageProcessor(String name)
-    {
+    protected final MessageProcessorMocker whenMessageProcessor(String name) {
         return new MessageProcessorMocker(muleContext).when(name);
     }
 
-    protected final MunitVerifier verifyCallOfMessageProcessor(String name)
-    {
+    protected final MunitVerifier verifyCallOfMessageProcessor(String name) {
         return new MunitVerifier(muleContext).verifyCallOfMessageProcessor(name);
     }
 
-    protected final MunitSpy spyMessageProcessor(String name)
-    {
+    protected final MunitSpy spyMessageProcessor(String name) {
         return new MunitSpy(muleContext).spyMessageProcessor(name);
     }
 
-    protected final MuleEvent runFlow(String name, MuleEvent event) throws MuleException
-    {
+    protected final MuleEvent runFlow(String name, MuleEvent event) throws MuleException {
         MessageProcessor flow = (MessageProcessor) muleContext.getRegistry().get(name);
-        if (flow == null)
-        {
+        if (flow == null) {
             throw new IllegalArgumentException("Flow " + name + " does not exist");
         }
 
@@ -262,125 +224,100 @@ public abstract class FunctionalMunitSuite
         return flow.process(event);
     }
 
-    private void initialiseSubFlow(MessageProcessor flow) throws InitialisationException
-    {
-        if (flow instanceof SubflowInterceptingChainLifecycleWrapper)
-        {
+    private void initialiseSubFlow(MessageProcessor flow) throws InitialisationException {
+        if (flow instanceof SubflowInterceptingChainLifecycleWrapper) {
             ((SubflowInterceptingChainLifecycleWrapper) flow).setMuleContext(muleContext);
             ((SubflowInterceptingChainLifecycleWrapper) flow).initialise();
         }
     }
 
-    protected final EndpointMocker whenEndpointWithAddress(String address)
-    {
+    protected final EndpointMocker whenEndpointWithAddress(String address) {
         EndpointMocker endpointMocker = new EndpointMocker(muleContext);
         return endpointMocker.whenEndpointWithAddress(address);
     }
 
-    protected final Matcher any()
-    {
+    protected final Matcher any() {
         return new AnyClassMatcher(Object.class);
     }
 
-    protected final Matcher isNotNull()
-    {
+    protected final Matcher isNotNull() {
         return new NotNullMatcher();
     }
 
-    protected final Matcher isNull()
-    {
+    protected final Matcher isNull() {
         return new NullMatcher();
     }
 
-    protected final Matcher anyCollection()
-    {
+    protected final Matcher anyCollection() {
         return new AnyClassMatcher(Collection.class);
     }
 
-    protected final Matcher anyMap()
-    {
+    protected final Matcher anyMap() {
         return new AnyClassMatcher(Map.class);
     }
 
-    protected final Matcher anySet()
-    {
+    protected final Matcher anySet() {
         return new AnyClassMatcher(Set.class);
     }
 
-    protected final Matcher anyList()
-    {
+    protected final Matcher anyList() {
         return new AnyClassMatcher(List.class);
     }
 
-    protected final Matcher anyString()
-    {
+    protected final Matcher anyString() {
         return new AnyClassMatcher(String.class);
     }
 
-    protected final Matcher anyObject()
-    {
+    protected final Matcher anyObject() {
         return new AnyClassMatcher(Object.class);
     }
 
-    protected final Matcher anyShort()
-    {
+    protected final Matcher anyShort() {
         return new AnyClassMatcher(Short.class);
     }
 
-    protected final Matcher anyFloat()
-    {
+    protected final Matcher anyFloat() {
         return new AnyClassMatcher(Float.class);
     }
 
-    protected Matcher anyDouble()
-    {
+    protected Matcher anyDouble() {
         return new AnyClassMatcher(Double.class);
     }
 
-    protected final Matcher eq(Object o)
-    {
+    protected final Matcher eq(Object o) {
         return new EqMatcher(o);
     }
 
-    protected final Matcher anyBoolean()
-    {
+    protected final Matcher anyBoolean() {
         return new AnyClassMatcher(Boolean.class);
     }
 
-    protected final Matcher anyByte()
-    {
+    protected final Matcher anyByte() {
         return new AnyClassMatcher(Byte.class);
     }
 
-    protected final Matcher anyInt()
-    {
+    protected final Matcher anyInt() {
         return new AnyClassMatcher(Integer.class);
     }
 
-    protected Properties getStartUpProperties()
-    {
+    protected Properties getStartUpProperties() {
         return null;
     }
 
-    private Properties loadProperties(String propertyFile)
-    {
-        try
-        {
+    private Properties loadProperties(String propertyFile) {
+        try {
             Properties prop = new Properties();
             InputStream in = getClass().getResourceAsStream(propertyFile);
             prop.load(in);
             in.close();
             return prop;
-        }
-        catch (Throwable t)
-        {
+        } catch (Throwable t) {
             return null;
         }
     }
 
     @AfterClass
-    public static void killMule() throws Throwable
-    {
+    public static void killMule() throws Throwable {
         muleContextManager.killMule(muleContext);
     }
 

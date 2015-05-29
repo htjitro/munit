@@ -28,6 +28,7 @@ import org.mule.munit.runner.mule.context.MunitSpringXmlConfigurationBuilder;
 import org.mule.munit.runner.output.DefaultOutputHandler;
 import org.mule.tck.TestingWorkListener;
 import org.mule.util.ClassUtils;
+import org.mule.util.TestsLogConfigurationHelper;
 
 import java.io.File;
 import java.io.IOException;
@@ -80,9 +81,13 @@ public class MuleContextManager {
             muleContext.dispose();
             disposePlugins();
         }
+
+        clearLogginConfiguration();
     }
 
     public MuleContext createMule(String resources) throws Exception {
+        actionsToRunBeforeMuleContextCreation();
+
         defineLogOutput(resources);
 
         List<ConfigurationBuilder> builders = new ArrayList<ConfigurationBuilder>();
@@ -91,7 +96,7 @@ public class MuleContextManager {
 
         builders.add(new ExtensionsManagerConfigurationBuilder());
 
-        addIfPresent( builders, CLASSNAME_ANNOTATIONS_CONFIG_BUILDER);
+        addIfPresent(builders, CLASSNAME_ANNOTATIONS_CONFIG_BUILDER);
         builders.add(getBuilder(resources));
 
         MuleContextBuilder contextBuilder = new DefaultMuleContextBuilder();
@@ -109,9 +114,27 @@ public class MuleContextManager {
         return context;
     }
 
+    private void actionsToRunBeforeMuleContextCreation() {
+        setUpLogginConfiguration();
+    }
+
+    /**
+     * @since 3.6.x
+     */
+    private void setUpLogginConfiguration() {
+        TestsLogConfigurationHelper.configureLoggingForTest(getClass());
+    }
+
+    /**
+     * @since 3.6.x
+     */
+    private void clearLogginConfiguration() {
+        TestsLogConfigurationHelper.clearLoggingConfig();
+    }
+
     private void addIfPresent(List<ConfigurationBuilder> builders, String builderClassName) throws Exception {
-        if(ClassUtils.isClassOnPath(builderClassName, this.getClass())) {
-            builders.add((ConfigurationBuilder)ClassUtils.instanciateClass(builderClassName, ClassUtils.NO_ARGS, this.getClass()));
+        if (ClassUtils.isClassOnPath(builderClassName, this.getClass())) {
+            builders.add((ConfigurationBuilder) ClassUtils.instanciateClass(builderClassName, ClassUtils.NO_ARGS, this.getClass()));
         }
     }
 
