@@ -15,12 +15,12 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
     </spring:beans>
 
     <munit:test name="db-connectorSelectFlowTest" description="Test">
-        <mock:when config-ref="mock" messageProcessor="db:select" doc:name="Mock">
+        <mock:when messageProcessor="db:select" doc:name="Mock">
             <mock:then-return payload-ref="#[[ {&quot;k&quot;:&quot;v&quot;} ]]"/>
         </mock:when>
         <flow-ref name="db-connectorSelectFlow" doc:name="Flow-ref to db-connectorSelectFlow"/>
 
-        <mock:verify-call config-ref="mock" messageProcessor=".*:.*" doc:name="Verify Call">
+        <mock:verify-call messageProcessor=".*:.*" doc:name="Verify Call">
             <mock:attributes>
                 <mock:attribute whereValue-ref="#[string:Echo]" name="doc:name"/>
             </mock:attributes>
@@ -31,11 +31,11 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
 
 
     <munit:test name="db-connectorIntertFlowTest" description="Test">
-        <mock:when config-ref="mock" messageProcessor="db:insert" doc:name="Mock">
+        <mock:when  messageProcessor="db:insert" doc:name="Mock">
             <mock:then-return payload-ref="#[1]"/>
         </mock:when>
         <flow-ref name="db-connectorInsertFlow" doc:name="Flow-ref to db-connectorInsertFlow"/>
-        <mock:verify-call config-ref="mock" messageProcessor=".*:.*" doc:name="Verify Call">
+        <mock:verify-call messageProcessor=".*:.*" doc:name="Verify Call">
             <mock:attributes>
                 <mock:attribute whereValue-ref="#[string:Echo]" name="doc:name"/>
             </mock:attributes>
@@ -45,11 +45,11 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
 
 
     <munit:test name="db-connectorUpdateFlowTest" description="Test">
-        <mock:when config-ref="mock" messageProcessor="db:update" doc:name="Mock">
+        <mock:when messageProcessor="db:update" doc:name="Mock">
             <mock:then-return payload-ref="#[1]"/>
         </mock:when>
         <flow-ref name="db-connectorUpdateFlow" doc:name="Flow-ref to db-connectorUpdateFlow"/>
-        <mock:verify-call config-ref="mock" messageProcessor=".*:.*" doc:name="Verify Call">
+        <mock:verify-call messageProcessor=".*:.*" doc:name="Verify Call">
             <mock:attributes>
                 <mock:attribute whereValue-ref="#[string:Echo]" name="doc:name"/>
             </mock:attributes>
@@ -59,11 +59,11 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
 
 
     <munit:test name="db-connectorDeleteFlowTest" description="Test">
-        <mock:when config-ref="mock" messageProcessor="db:delete" doc:name="Mock">
+        <mock:when messageProcessor="db:delete" doc:name="Mock">
             <mock:then-return payload-ref="#[1]"/>
         </mock:when>
         <flow-ref name="db-connectorDeleteFlow" doc:name="Flow-ref to db-connectorDeleteFlow"/>
-        <mock:verify-call config-ref="mock" messageProcessor=".*:.*" doc:name="Verify Call">
+        <mock:verify-call messageProcessor=".*:.*" doc:name="Verify Call">
             <mock:attributes>
                 <mock:attribute whereValue-ref="#[string:Echo]" name="doc:name"/>
             </mock:attributes>

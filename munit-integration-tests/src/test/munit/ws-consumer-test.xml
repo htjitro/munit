@@ -11,7 +11,7 @@ http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/cor
     </spring:beans>
     
     <munit:test name="ws-consumerTestFlow" description="Test">
-        <mock:when config-ref="mock_ws-consumer" doc:name="Mock" messageProcessor="ws:consumer">
+        <mock:when doc:name="Mock" messageProcessor="ws:consumer">
             <mock:with-attributes>
                 <mock:with-attribute whereValue-ref="#['GetAlerts']" name="operation"/>
             </mock:with-attributes>

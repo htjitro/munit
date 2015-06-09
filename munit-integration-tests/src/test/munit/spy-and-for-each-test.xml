@@ -12,13 +12,13 @@ http://www.mulesoft.org/schema/mule/mock http://www.mulesoft.org/schema/mule/moc
     </spring:beans>
 
     <munit:test name="spy-and-for-each-assertions" description="Munit assertions">
-        <mock:when config-ref="mock" messageProcessor="jira:create-issue">
+        <mock:when messageProcessor="jira:create-issue">
             <mock:with-attributes>
                 <mock:with-attribute whereValue-ref="#[string:test-project]" name="project"/>
             </mock:with-attributes>
             <mock:then-return payload-ref="#['Mocked Jira']"/>
         </mock:when>
-        <mock:spy config-ref="mock" messageProcessor="jira:create-issue">
+        <mock:spy messageProcessor="jira:create-issue">
             <mock:with-attributes>
                 <mock:with-attribute whereValue-ref="#[string:test-project]" name="project"/>
             </mock:with-attributes>
