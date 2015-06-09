@@ -7,13 +7,8 @@
 package org.mule.munit.runner.mule;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.junit.Before;
+import org.mockito.Matchers;
 import org.mule.api.DefaultMuleException;
 import org.mule.api.MuleContext;
 import org.mule.api.MuleEvent;
@@ -34,8 +29,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.junit.Before;
-import org.mockito.Matchers;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 public class MunitTestTest
 {
@@ -84,7 +79,13 @@ public class MunitTestTest
     {
         MunitTest test = new MockedTest(buildList(before), testFlow, buildList(after), handler);
 
-        when(testFlow.process(muleEvent)).thenThrow(new AssertionError("Error"));
+        MuleException muleException =mock(DefaultMuleException.class);
+        when(muleException.getCause()).thenReturn(new AssertionError("Error"));
+
+
+//        when(testFlow.process(muleEvent)).thenThrow(new AssertionError("Error"));
+        when(testFlow.process(muleEvent)).thenThrow(muleException);
+
         TestResult testResult = test.run();
 
         verify(testFlow, times(1)).process(muleEvent);
@@ -133,7 +134,7 @@ public class MunitTestTest
     }
 
     @org.junit.Test
-    public void whenAnExpetionThatDoesNotMatchIsThrownItShouldFail() throws MuleException
+    public void whenAnExceptionThatDoesNotMatchIsThrownItShouldFail() throws MuleException
     {
         final MunitTest test = new MockedTest(Collections.<MunitFlow>emptyList(), testFlow, Collections.<MunitFlow>emptyList(), handler);
         when(testFlow.process(Matchers.<MuleEvent>anyObject())).thenThrow(new DefaultMuleException(new IllegalArgumentException()));
@@ -141,11 +142,13 @@ public class MunitTestTest
 
         final TestResult testResult = test.run();
 
+        assertNull(testResult.getFailure());
+        assertNotNull(testResult.getError());
         assertFalse(testResult.hasSucceeded());
     }
 
     @org.junit.Test
-    public void whenAnExpetionIsExpectedButNothingIsThrownItShouldFail() throws MuleException
+    public void whenAnExceptionIsExpectedButNothingIsThrownItShouldFail() throws MuleException
     {
         final MunitTest test = new MockedTest(Collections.<MunitFlow>emptyList(), testFlow, Collections.<MunitFlow>emptyList(), handler);
         testFlow.setExpectExceptionThatSatisfies("something");

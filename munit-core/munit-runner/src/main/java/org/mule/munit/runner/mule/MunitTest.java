@@ -6,8 +6,7 @@
  */
 package org.mule.munit.runner.mule;
 
-import static junit.framework.Assert.fail;
-import static org.mule.munit.common.MunitCore.buildMuleStackTrace;
+import org.apache.commons.lang.StringUtils;
 import org.mule.DefaultMuleEvent;
 import org.mule.DefaultMuleMessage;
 import org.mule.MessageExchangePattern;
@@ -26,7 +25,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import static junit.framework.Assert.fail;
+import static org.mule.munit.common.MunitCore.buildMuleStackTrace;
 
 /**
  * <p>MUnit Test</p>
@@ -34,8 +34,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Mulesoft Inc.
  * @since 3.3.2
  */
-public class MunitTest
-{
+public class MunitTest {
 
     /**
      * <p>The MUnit flows that have to be run before the MUnit test.</p>
@@ -58,17 +57,13 @@ public class MunitTest
     private TestOutputHandler outputHandler;
     private MuleContext muleContext;
 
-    public static String stack2string(Throwable e)
-    {
-        try
-        {
+    public static String stack2string(Throwable e) {
+        try {
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
             e.printStackTrace(pw);
             return sw.toString();
-        }
-        catch (Exception e2)
-        {
+        } catch (Exception e2) {
             return "";
         }
     }
@@ -76,8 +71,7 @@ public class MunitTest
     public MunitTest(List<MunitFlow> before,
                      MunitTestFlow test,
                      List<MunitFlow> after,
-                     TestOutputHandler outputHandler, MuleContext muleContext)
-    {
+                     TestOutputHandler outputHandler, MuleContext muleContext) {
         this.before = before;
         this.after = after;
         this.test = test;
@@ -85,18 +79,17 @@ public class MunitTest
         this.muleContext = muleContext;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return test.getName();
     }
-    
-    public boolean isIgnore(){ return test.isIgnore();}
-    
-    public TestResult run()
-    {
+
+    public boolean isIgnore() {
+        return test.isIgnore();
+    }
+
+    public TestResult run() {
         TestResult result = new TestResult(getName());
-        if (test.isIgnore())
-        {
+        if (test.isIgnore()) {
             result.setSkipped(true);
             return result;
         }
@@ -104,40 +97,40 @@ public class MunitTest
         long start = System.currentTimeMillis();
         MuleEvent event = muleEvent();
 
-        try
-        {
+        try {
             run(event, before);
             showDescription();
             test.process(event);
-            if (StringUtils.isNotBlank(test.getExpectExceptionThatSatisfies()))
-            {
+            if (StringUtils.isNotBlank(test.getExpectExceptionThatSatisfies())) {
                 fail("Exception matching '" + test.getExpectExceptionThatSatisfies() + "', but wasn't thrown");
             }
-        }
-        catch (final AssertionError t)
-        {
+        } catch (final AssertionError t) {
             result.setFailure(buildNotifcationFrom(t));
-        }
-        catch (final MuleException e)
-        {
-            try
-            {
-                if (!test.expectException(e, event))
-                {
-                    e.setStackTrace(buildMuleStackTrace(event.getMuleContext())
-                                            .toArray(new StackTraceElement[] {}));
-                    result.setError(buildNotifcationFrom(e));
+        } catch (final MuleException e) {
+            try {
+                if (!test.expectException(e, event)) {
+
+                    Throwable cause = e.getCause();
+                    if (cause != null && cause.getClass().isAssignableFrom(AssertionError.class)) {
+                        cause.setStackTrace(buildMuleStackTrace(event.getMuleContext())
+                                .toArray(new StackTraceElement[]{}));
+
+                        Notification notification = buildNotifcationFrom(cause);
+                        result.setFailure(notification);
+                    } else {
+                        e.setStackTrace(buildMuleStackTrace(event.getMuleContext())
+                                .toArray(new StackTraceElement[]{}));
+
+                        Notification notification = buildNotifcationFrom(e);
+                        result.setError(notification);
+                    }
                 }
-            }
-            catch (final AssertionError t)
-            {
+            } catch (final AssertionError t) {
                 t.setStackTrace(buildMuleStackTrace(event.getMuleContext())
-                                        .toArray(new StackTraceElement[] {}));
+                        .toArray(new StackTraceElement[]{}));
                 result.setFailure(buildNotifcationFrom(t));
             }
-        }
-        finally
-        {
+        } finally {
             MunitCore.reset(event.getMuleContext());
             runAfter(result, event);
         }
@@ -149,50 +142,37 @@ public class MunitTest
     }
 
 
-    private Notification buildNotifcationFrom(Throwable t)
-    {
+    private Notification buildNotifcationFrom(Throwable t) {
         return new Notification(t.getMessage(), stack2string(t));
     }
 
-    private void runAfter(TestResult result, MuleEvent event)
-    {
-        try
-        {
+    private void runAfter(TestResult result, MuleEvent event) {
+        try {
             run(event, after);
-        }
-        catch (MuleException e)
-        {
+        } catch (MuleException e) {
             result.setError(buildNotifcationFrom(e));
         }
     }
 
     private void run(MuleEvent event, List<MunitFlow> flows)
-            throws MuleException
-    {
-        if (flows != null)
-        {
-            for (MunitFlow flow : flows)
-            {
+            throws MuleException {
+        if (flows != null) {
+            for (MunitFlow flow : flows) {
                 outputHandler.printDescription(flow.getName(), flow.getDescription());
                 flow.process(event);
             }
         }
     }
 
-    private void showDescription()
-    {
+    private void showDescription() {
         outputHandler.printDescription(test.getName(), test.getDescription());
     }
 
-    protected MuleEvent muleEvent()
-    {
-        try
-        {
+    protected MuleEvent muleEvent() {
+        try {
             return new DefaultMuleEvent(new DefaultMuleMessage(null, muleContext), MessageExchangePattern.REQUEST_RESPONSE, MuleTestUtils.getTestFlow(muleContext));
 
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             return null;
         }
     }

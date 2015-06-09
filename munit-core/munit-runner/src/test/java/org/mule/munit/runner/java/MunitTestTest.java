@@ -23,10 +23,6 @@ import java.util.List;
 
 import static org.mockito.Mockito.*;
 
-
-/**
- * Created by damiansima on 12/10/14.
- */
 public class MunitTestTest {
 
     private static final String FLOW_NAME = "flow_name";
