@@ -19,7 +19,7 @@
     <mock:config name="mock"/>
 
     <munit:test  name="testFlowRefToAFlow" description="Validate the mocking of the flow.">
-        <mock:when config-ref="mock" messageProcessor="flow">
+        <mock:when messageProcessor="flow">
             <mock:with-attributes>
                 <mock:with-attribute name="name" whereValue-ref="#['aFlow']"/>
             </mock:with-attributes>
@@ -32,7 +32,7 @@
     </munit:test>
 
     <munit:test name="testFlowRefToASubFlow" description="Validate the mocking of the sub-flow.">
-        <mock:when config-ref="mock" messageProcessor="sub-flow">
+        <mock:when messageProcessor="sub-flow">
             <mock:with-attributes>
                 <mock:with-attribute name="id" whereValue-ref="#[matchContains('aSubFlow')]"/>
             </mock:with-attributes>

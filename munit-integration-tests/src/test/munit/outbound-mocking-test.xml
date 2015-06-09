@@ -24,7 +24,7 @@
                 description="
         We want to validate that the payload is the same as the mocked endpoint">
 
-        <mock:outbound-endpoint config-ref="mock" address="http://localhost:10443/test" returnPayload-ref="#[string:test]">
+        <mock:outbound-endpoint address="http://localhost:10443/test" returnPayload-ref="#[string:test]">
             <mock:assertions>
                 <munit:assert-that payloadIs-ref="#[string: Hello world!]"/>
             </mock:assertions>
@@ -46,8 +46,7 @@
 
         <munit:set payload-ref="#[string: Hello world!]"/>
 
-        <mock:outbound-endpoint config-ref="mock" address="http://localhost:10443/test" returnPayload-ref="#[string:test]">
-
+        <mock:outbound-endpoint address="http://localhost:10443/test" returnPayload-ref="#[string:test]">
 
             <mock:return-invocation-properties>
                 <mock:return-invocation-property key="invocationTest" value-ref="#[string:invocationValue]"/>
@@ -85,7 +84,7 @@
         We want to validate that the endpoints can be mocked the same way message processors are mocked">
 
 
-        <mock:when config-ref="mock" messageProcessor="http:outbound-endpoint">
+        <mock:when messageProcessor="http:outbound-endpoint">
             <mock:then-return payload-ref="#[string:localhost3]"/>
         </mock:when>
         <munit:set payload-ref="#[string:anything]"/>
@@ -104,7 +103,7 @@
         We want to validate that the endpoints can be mocked the same way message processors are mocked">
 
 
-        <mock:when config-ref="mock" messageProcessor="http:outbound-endpoint">
+        <mock:when messageProcessor="http:outbound-endpoint">
             <mock:with-attributes>
                 <mock:with-attribute name="method" whereValue-ref="#[string:GET]"/>
                 <mock:with-attribute name="host" whereValue-ref="#[string:anything]"/>
