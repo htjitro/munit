@@ -18,7 +18,8 @@
 
     <properties>
         <mule.version>3.7.0-SNAPSHOT</mule.version>
-        <mule.devkit.version>3.6.0</mule.devkit.version>
+
+        <mule.devkit.version>3.5.3</mule.devkit.version>
 
         <skip.javadoc>true</skip.javadoc>
         <devkit.studio.package.skip>false</devkit.studio.package.skip>

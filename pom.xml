@@ -12,7 +12,7 @@
 
     <properties>
         <mule.version>3.7.0-SNAPSHOT</mule.version>
-        <mule.devkit.version>3.6.0</mule.devkit.version>
+
         <mule.extensions.version>1.0.0-SNAPSHOT</mule.extensions.version>
 
         <interceptor.api.version>3.7.0-SNAPSHOT</interceptor.api.version>
